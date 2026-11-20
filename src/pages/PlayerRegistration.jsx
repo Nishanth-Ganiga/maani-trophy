@@ -4,10 +4,10 @@ import { supabase } from "../lib/supabase";
 import { ROLES, JERSEY_SIZES, MAX_PHOTO_BYTES, MAX_ORIGINAL_BYTES, PHOTO_TYPES, PHOTO_BUCKET } from "../lib/options";
 import { compressImage } from "../lib/image";
 import { brandify } from "../lib/brand";
-import { NotConfigured } from "./Shared";
+import { NotConfigured, cleanPhone, validPhone } from "./Shared";
 import "./Pages.css";
 
-const empty = { full_name: "", role: "", jersey_name: "", jersey_size: "" };
+const empty = { full_name: "", phone: "", role: "", jersey_name: "", jersey_size: "" };
 
 export default function PlayerRegistration() {
   const [f, setF] = useState(empty);
@@ -50,6 +50,8 @@ export default function PlayerRegistration() {
   const submit = async (e) => {
     e.preventDefault();
     setStatus(null);
+    if (!validPhone(f.phone))
+      return setStatus({ ok: false, text: "ದಯವಿಟ್ಟು ಸರಿಯಾದ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ." });
     if (!photo) return setStatus({ ok: false, text: "ದಯವಿಟ್ಟು ಆಟಗಾರರ ಭಾವಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ." });
     if (!supabase) return setStatus({ ok: false, text: "ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕಗೊಂಡಿಲ್ಲ." });
     setBusy(true);
@@ -65,6 +67,7 @@ export default function PlayerRegistration() {
 
     const { error } = await supabase.from("players").insert({
       full_name: f.full_name.trim(),
+      phone: cleanPhone(f.phone),
       photo_url: data.publicUrl,
       role: f.role,
       jersey_name: f.jersey_name.trim(),
@@ -98,6 +101,11 @@ export default function PlayerRegistration() {
           <div className="field">
             <label>ಆಟಗಾರರ ಹೆಸರು *</label>
             <input required autoComplete="name" enterKeyHint="next" value={f.full_name} onChange={set("full_name")} />
+          </div>
+
+          <div className="field">
+            <label>ಆಟಗಾರರ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ *</label>
+            <input required type="tel" inputMode="numeric" autoComplete="tel-national" pattern="[6-9][0-9]{9}" maxLength={10} enterKeyHint="next" value={f.phone} onChange={set("phone")} />
           </div>
 
           <div className="field">

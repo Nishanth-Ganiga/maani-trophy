@@ -134,13 +134,13 @@ function Dashboard({ onLogout }) {
           </table>
         ) : (
           <table>
-            <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Mobile</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.no}</td>
                   <td>{r.photo_url ? <a href={r.photo_url} target="_blank" rel="noreferrer"><img className="thumb" src={r.photo_url} alt="" /></a> : "—"}</td>
-                  <td>{r.full_name}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
+                  <td>{r.full_name}</td><td>{r.phone || "—"}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
                   <td>{fmt(r.created_at)}</td>
                   <td><button className="btn small danger" onClick={() => remove("players", r.id, r.photo_url)}>Delete</button></td>
                 </tr>
@@ -164,6 +164,7 @@ function Dashboard({ onLogout }) {
           <h1>{pl.full_name}</h1>
           <table className="pp-table">
             <tbody>
+              <tr><th>Mobile</th><td>{pl.phone || "—"}</td></tr>
               <tr><th>Role</th><td>{roleEn(pl.role)}</td></tr>
               <tr><th>Jersey name</th><td>{pl.jersey_name}</td></tr>
               <tr><th>Jersey size</th><td>{pl.jersey_size}</td></tr>

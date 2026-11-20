@@ -12,6 +12,7 @@ create table if not exists public.teams (
 create table if not exists public.players (
   id uuid primary key default gen_random_uuid(),
   full_name text not null,
+  phone text,
   photo_url text not null,
   role text not null check (role in ('wicketkeeper','batsman','bowler','allrounder')),
   jersey_name text not null,
@@ -22,6 +23,9 @@ create table if not exists public.players (
 create table if not exists public.admins (
   user_id uuid primary key references auth.users(id) on delete cascade
 );
+
+-- If you already created the players table earlier, this adds the new phone column:
+alter table public.players add column if not exists phone text;
 
 alter table public.teams   enable row level security;
 alter table public.players enable row level security;
