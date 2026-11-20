@@ -40,7 +40,7 @@ function Login({ onDone }) {
   return (
     <form className="card" onSubmit={submit}>
       <div className="designer-note">
-        <p className="dn-title">🧑‍💻 ಈ ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ವಿನ್ಯಾಸಗೊಳಿಸಿದವರು <a href="https://www.instagram.com/weird.allegory/" target="_blank" rel="noopener noreferrer"><b>ನಿಶಾಂತ್ ಗಣಿಗ</b></a></p>
+        <p className="dn-title">🧑‍💻 ಈ ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ವಿನ್ಯಾಸಗೊಳಿಸಿದವರು <a href="https://www.instagram.com/weird.allegory/" target="_blank" rel="noopener noreferrer"><b>ನಿಶಾಂತ್ ಗಾಣಿಗ</b></a></p>
         <p>ಇಲ್ಲಿ ನೋಂದಣಿಯಾದ ವಿವರಗಳನ್ನು ನೋಡುವ ಅಧಿಕಾರ ಅವರಿಗೆ ಮಾತ್ರ ಇದೆ.</p>
         <p className="dn-fun">
           😄 ಪಾಸ್‌ವರ್ಡ್ ಊಹಿಸೋಕೆ ಟ್ರೈ ಮಾಡ್ಬೇಡಿ ಗುರು, ಇದು ಮಾಣಿ ಟ್ರೋಫಿ ಫೈನಲ್‌ಗಿಂತ ಕಷ್ಟ!
