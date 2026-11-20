@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
-import { roleLabel, PHOTO_BUCKET } from "../lib/options";
+import { PHOTO_BUCKET } from "../lib/options";
 import { NotConfigured } from "./Shared";
 import "./Pages.css";
 
@@ -17,6 +17,8 @@ const download = (name, rows) => {
   a.href = url; a.download = name; a.click();
   URL.revokeObjectURL(url);
 };
+const ROLE_EN = { wicketkeeper: "Wicketkeeper", batsman: "Batsman", bowler: "Bowler", allrounder: "All-rounder" };
+const roleEn = (v) => ROLE_EN[v] || v || "—";
 const fmt = (d) => new Date(d).toLocaleString("en-IN");
 
 function Login({ onDone }) {
@@ -66,13 +68,13 @@ function Dashboard({ onLogout }) {
       supabase.from("teams").select("*").order("created_at", { ascending: false }),
       supabase.from("players").select("*").order("created_at", { ascending: false }),
     ]);
-    if (t.error || p.error) return setErr("ಡೇಟಾ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ನೀವು ನಿರ್ವಾಹಕರಾಗಿ ಸೇರ್ಪಡೆಯಾಗಿದ್ದೀರಾ ಎಂದು ಪರಿಶೀಲಿಸಿ.");
+    if (t.error || p.error) return setErr("Could not load data. Check that your user is added to the admins table.");
     setErr(""); setTeams(t.data); setPlayers(p.data);
   }, []);
   useEffect(() => { load(); }, [load]);
 
   const remove = async (table, id, photoUrl) => {
-    if (!window.confirm("ಖಂಡಿತವಾಗಿ ಅಳಿಸಬೇಕೇ?")) return;
+    if (!window.confirm("Are you sure you want to delete this?")) return;
     await supabase.from(table).delete().eq("id", id);
     if (photoUrl) await supabase.storage.from(PHOTO_BUCKET).remove([photoUrl.split("/").pop()]);
     load();
@@ -82,51 +84,51 @@ function Dashboard({ onLogout }) {
 
   return (
     <div className="card wide">
-      <h2>ನಿರ್ವಾಹಕ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</h2>
-      <p className="sub">ಒಟ್ಟು ತಂಡಗಳು: {teams.length} · ಒಟ್ಟು ಆಟಗಾರರು: {players.length}</p>
+      <h2>Admin Dashboard</h2>
+      <p className="sub">Total teams: {teams.length} · Total players: {players.length}</p>
       {err && <div className="msg err">{err}</div>}
       <div className="toolbar">
-        <button className={"btn small tab " + (tab === "teams" ? "active" : "ghost")} onClick={() => setTab("teams")}>ತಂಡಗಳು</button>
-        <button className={"btn small tab " + (tab === "players" ? "active" : "ghost")} onClick={() => setTab("players")}>ಆಟಗಾರರು</button>
+        <button className={"btn small tab " + (tab === "teams" ? "active" : "ghost")} onClick={() => setTab("teams")}>Teams</button>
+        <button className={"btn small tab " + (tab === "players" ? "active" : "ghost")} onClick={() => setTab("players")}>Players</button>
         <input
-          placeholder="ಹುಡುಕಿ…" value={q} onChange={(e) => setQ(e.target.value)}
+          placeholder="Search…" value={q} onChange={(e) => setQ(e.target.value)}
           style={{ padding: ".5rem 1rem", borderRadius: 20, border: "2px solid rgba(255,255,255,.3)", background: "rgba(255,255,255,.08)", color: "#fff", fontFamily: "inherit" }}
         />
-        <button className="btn small" onClick={() => download(tab + ".csv", rows)}>CSV ಡೌನ್‌ಲೋಡ್</button>
-        <button className="btn small ghost" onClick={load}>ರಿಫ್ರೆಶ್</button>
-        <button className="btn small danger" onClick={onLogout}>ಲಾಗ್ ಔಟ್</button>
+        <button className="btn small" onClick={() => download(tab + ".csv", rows)}>Download CSV</button>
+        <button className="btn small ghost" onClick={load}>Refresh</button>
+        <button className="btn small danger" onClick={onLogout}>Log out</button>
       </div>
 
       <div className="table-wrap">
         {tab === "teams" ? (
           <table>
-            <thead><tr><th>ತಂಡ</th><th>ಮಾಲೀಕರು</th><th>ಮೊಬೈಲ್</th><th>ಊರು</th><th>ದಿನಾಂಕ</th><th></th></tr></thead>
+            <thead><tr><th>Team</th><th>Owner</th><th>Mobile</th><th>Place</th><th>Registered on</th><th></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.team_name}</td><td>{r.owner_name}</td><td>{r.phone}</td><td>{r.place}</td>
                   <td>{fmt(r.created_at)}</td>
-                  <td><button className="btn small danger" onClick={() => remove("teams", r.id)}>ಅಳಿಸಿ</button></td>
+                  <td><button className="btn small danger" onClick={() => remove("teams", r.id)}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
           <table>
-            <thead><tr><th>ಚಿತ್ರ</th><th>ಹೆಸರು</th><th>ಪಾತ್ರ</th><th>ಜೆರ್ಸಿ ಹೆಸರು</th><th>ಜೆರ್ಸಿ ಗಾತ್ರ</th><th>ದಿನಾಂಕ</th><th></th></tr></thead>
+            <thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.photo_url ? <a href={r.photo_url} target="_blank" rel="noreferrer"><img className="thumb" src={r.photo_url} alt="" /></a> : "—"}</td>
-                  <td>{r.full_name}</td><td>{roleLabel(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
+                  <td>{r.full_name}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
                   <td>{fmt(r.created_at)}</td>
-                  <td><button className="btn small danger" onClick={() => remove("players", r.id, r.photo_url)}>ಅಳಿಸಿ</button></td>
+                  <td><button className="btn small danger" onClick={() => remove("players", r.id, r.photo_url)}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
-        {!rows.length && <p className="sub" style={{ marginTop: "1rem" }}>ಯಾವುದೇ ದಾಖಲೆ ಇಲ್ಲ.</p>}
+        {!rows.length && <p className="sub" style={{ marginTop: "1rem" }}>No records found.</p>}
       </div>
     </div>
   );
