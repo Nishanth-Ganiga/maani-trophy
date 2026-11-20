@@ -85,7 +85,7 @@ th { color: #FFD25A; }
   .print-area { display: block; color: #111; font-family: 'Poppins', 'Noto Sans Kannada', sans-serif; }
   .print-page {
     page-break-after: always; break-after: page; height: 255mm;
-    display: flex; flex-direction: column; align-items: center; gap: 10mm; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 6mm; text-align: center;
   }
   .print-page:last-child { page-break-after: auto; break-after: auto; }
   .print-page header {
@@ -93,7 +93,7 @@ th { color: #FFD25A; }
     border-bottom: 3px solid #FFBC0D; padding-bottom: 4mm;
   }
   .pp-number { font-size: 30pt; font-weight: 800; color: #DA291C; }
-  .pp-photo { width: 85mm; height: 85mm; object-fit: cover; border-radius: 6mm; border: 2mm solid #FFBC0D; }
+  .pp-photo { max-width: 140mm; max-height: 100mm; width: auto; height: auto; object-fit: contain; border: 1.5mm solid #FFBC0D; image-rendering: auto; }
   .print-page h1 { font-size: 26pt; line-height: 1.3; }
   .pp-table { width: 100%; max-width: 140mm; border-collapse: collapse; font-size: 14pt; }
   .pp-table th, .pp-table td { border: 1px solid #ccc; padding: 3mm 4mm; text-align: left; white-space: normal; color: #111; }

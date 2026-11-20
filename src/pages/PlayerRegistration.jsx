@@ -36,8 +36,8 @@ export default function PlayerRegistration() {
     }
     setPrepping(true);
     try {
-      // phone photos are shrunk automatically so they always fit under 2 MB
-      const small = file.size <= MAX_PHOTO_BYTES && file.size < 600 * 1024 ? file : await compressImage(file, MAX_PHOTO_BYTES);
+      // photos up to 2 MB are kept exactly as they are; only bigger ones are reduced (quality first, size last)
+      const small = file.size <= MAX_PHOTO_BYTES ? file : await compressImage(file, MAX_PHOTO_BYTES);
       setPhoto(small);
       setPreview(URL.createObjectURL(small));
     } catch {
