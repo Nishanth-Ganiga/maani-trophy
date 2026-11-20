@@ -58,15 +58,15 @@ export default function TeamRegistration() {
           {status && <div className={"msg " + (status.ok ? "ok" : "err")}>{status.text}</div>}
           <div className="field">
             <label>ತಂಡದ ಹೆಸರು *</label>
-            <input required value={f.team_name} onChange={set("team_name")} />
+            <input required enterKeyHint="next" value={f.team_name} onChange={set("team_name")} />
           </div>
           <div className="field">
             <label>ಮಾಲೀಕರ ಹೆಸರು *</label>
-            <input required value={f.owner_name} onChange={set("owner_name")} />
+            <input required autoComplete="name" enterKeyHint="next" value={f.owner_name} onChange={set("owner_name")} />
           </div>
           <div className="field">
             <label>ಮೊಬೈಲ್ ಸಂಖ್ಯೆ *</label>
-            <input required inputMode="numeric" maxLength={10} value={f.phone} onChange={set("phone")} />
+            <input required type="tel" inputMode="numeric" autoComplete="tel-national" pattern="[6-9][0-9]{9}" maxLength={10} enterKeyHint="next" value={f.phone} onChange={set("phone")} />
           </div>
           <div className="field">
             <label>ಊರು *</label>

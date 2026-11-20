@@ -331,3 +331,19 @@
 .brand-en { display: none; }
 html.translated-ltr .brand-en, html.translated-rtl .brand-en { display: inline; }
 html.translated-ltr .brand-kn, html.translated-rtl .brand-kn { display: none; }
+
+/* ---------- Mobile performance: no blur/backdrop filters, lighter shadows ---------- */
+@media (max-width: 900px) {
+  .team-chip, .rules-list li, .countdown-card, .contact-list a, .arrows {
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .team-chip, .rules-list li, .countdown-card, .contact-list a { background: rgba(0,0,0,.35); }
+  .arrows { background: rgba(5, 8, 20, 0.9); }
+  .logo-glow { filter: none; }
+  .hero-img { filter: drop-shadow(0 16px 24px rgba(0,0,0,.55)); }
+  .date-card, .fact-card, .prize-card { box-shadow: 0 8px 18px rgba(0,0,0,.4); }
+  .bg-slide-panel { will-change: transform; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

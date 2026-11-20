@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
-import { ROLES, JERSEY_SIZES, MAX_PHOTO_BYTES, PHOTO_TYPES, PHOTO_BUCKET } from "../lib/options";
+import { ROLES, JERSEY_SIZES, MAX_PHOTO_BYTES, MAX_ORIGINAL_BYTES, PHOTO_TYPES, PHOTO_BUCKET } from "../lib/options";
+import { compressImage } from "../lib/image";
 import { brandify } from "../lib/brand";
 import { NotConfigured } from "./Shared";
 import "./Pages.css";
@@ -13,26 +14,37 @@ export default function PlayerRegistration() {
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState("");
   const [busy, setBusy] = useState(false);
+  const [prepping, setPrepping] = useState(false);
   const [status, setStatus] = useState(null);
   const fileRef = useRef(null);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
 
   useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview]);
 
-  const pickPhoto = (e) => {
-    const file = e.target.files?.[0];
+  const pickPhoto = async (e) => {
+    const input = e.target;
+    const file = input.files?.[0];
     setStatus(null);
     if (!file) return;
     if (!PHOTO_TYPES.includes(file.type)) {
-      e.target.value = "";
+      input.value = "";
       return setStatus({ ok: false, text: "ಕೇವಲ PNG ಅಥವಾ JPEG ಚಿತ್ರಗಳನ್ನು ಮಾತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಬಹುದು." });
     }
-    if (file.size > MAX_PHOTO_BYTES) {
-      e.target.value = "";
-      return setStatus({ ok: false, text: "ಚಿತ್ರದ ಗಾತ್ರ 2 MB ಗಿಂತ ಹೆಚ್ಚು ಇರಬಾರದು." });
+    if (file.size > MAX_ORIGINAL_BYTES) {
+      input.value = "";
+      return setStatus({ ok: false, text: "ಚಿತ್ರ ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ. ದಯವಿಟ್ಟು ಚಿಕ್ಕ ಚಿತ್ರವನ್ನು ಆರಿಸಿ." });
     }
-    setPhoto(file);
-    setPreview(URL.createObjectURL(file));
+    setPrepping(true);
+    try {
+      // phone photos are shrunk automatically so they always fit under 2 MB
+      const small = file.size <= MAX_PHOTO_BYTES && file.size < 600 * 1024 ? file : await compressImage(file, MAX_PHOTO_BYTES);
+      setPhoto(small);
+      setPreview(URL.createObjectURL(small));
+    } catch {
+      input.value = "";
+      setStatus({ ok: false, text: "ಚಿತ್ರವನ್ನು ಸಿದ್ಧಪಡಿಸಲು ಆಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಬೇರೆ ಚಿತ್ರವನ್ನು ಆರಿಸಿ." });
+    }
+    setPrepping(false);
   };
 
   const submit = async (e) => {
@@ -85,12 +97,13 @@ export default function PlayerRegistration() {
 
           <div className="field">
             <label>ಆಟಗಾರರ ಹೆಸರು *</label>
-            <input required value={f.full_name} onChange={set("full_name")} />
+            <input required autoComplete="name" enterKeyHint="next" value={f.full_name} onChange={set("full_name")} />
           </div>
 
           <div className="field">
-            <label>ಆಟಗಾರರ ಭಾವಚಿತ್ರ * (PNG / JPEG, ಗರಿಷ್ಠ 2 MB)</label>
+            <label>ಆಟಗಾರರ ಭಾವಚಿತ್ರ * (PNG / JPEG)</label>
             <input ref={fileRef} type="file" accept="image/png,image/jpeg" onChange={pickPhoto} />
+            {prepping && <span className="hint">ಚಿತ್ರ ಸಿದ್ಧವಾಗುತ್ತಿದೆ…</span>}
             {preview && <img src={preview} alt="ಪೂರ್ವವೀಕ್ಷಣೆ" className="photo-preview" />}
           </div>
 
@@ -105,7 +118,7 @@ export default function PlayerRegistration() {
           <div className="row">
             <div className="field">
               <label>ಜೆರ್ಸಿ ಹೆಸರು *</label>
-              <input required maxLength={15} value={f.jersey_name} onChange={set("jersey_name")} />
+              <input required maxLength={15} autoCapitalize="characters" enterKeyHint="done" value={f.jersey_name} onChange={set("jersey_name")} />
             </div>
             <div className="field">
               <label>ಜೆರ್ಸಿ ಗಾತ್ರ *</label>
@@ -116,7 +129,7 @@ export default function PlayerRegistration() {
             </div>
           </div>
 
-          <button className="btn" disabled={busy}>{busy ? "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…" : "ನೋಂದಣಿ ಮಾಡಿ"}</button>
+          <button className="btn" disabled={busy || prepping}>{busy ? "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…" : "ನೋಂದಣಿ ಮಾಡಿ"}</button>
         </form>
       </div>
     </>

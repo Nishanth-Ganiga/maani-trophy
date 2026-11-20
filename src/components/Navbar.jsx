@@ -19,8 +19,9 @@ const Navbar = () => {
     <motion.div className="navbar" initial="hidden" animate="visible" variants={container}>
       <a href="#/" className="logo">
         <motion.img
-          src="./images/darkast-colony.png"
+          src="./images/darkast-colony-sm.webp"
           alt="ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ"
+          width="64" height="64"
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
           transition={{ duration: 0.3 }}
         />

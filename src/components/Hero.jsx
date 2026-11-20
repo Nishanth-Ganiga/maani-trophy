@@ -17,7 +17,7 @@ const slides = [
     kicker: "ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ ಇವರ ಆಶ್ರಯದಲ್ಲಿ",
     title: "ಮಾಣಿ ಟ್ರೋಫಿ 🏆",
     text: null,
-    image: "./images/darkast-colony.png",
+    image: "./images/darkast-colony.webp",
     imageAlt: "ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ",
     contacts: [
       { name: "ರಮೇಶ್ ಲೋಬೋ", phone: "9353896918" },
@@ -34,7 +34,7 @@ const slides = [
     title: "ಮಾಣಿ ಅವರ ನೆನಪಿನಲ್ಲಿ 🕯️",
     text:
       "ಅವರು ನಮ್ಮನ್ನು ಅಗಲಿದ್ದರೂ, ಅವರ ನಗು, ಸ್ನೇಹ ಮತ್ತು ಪ್ರೀತಿ ನಮ್ಮ ಹೃದಯದಲ್ಲಿ ಸದಾ ಜೀವಂತ. ಅವರ ಸವಿನೆನಪಿಗಾಗಿ, ಅವರ ಹೆಸರಿನಲ್ಲಿ ಈ ‘ಮಾಣಿ ಟ್ರೋಫಿ’ ಪಂದ್ಯಾವಳಿಯನ್ನು ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ ಆಯೋಜಿಸುತ್ತಿದೆ.",
-    image: "./images/maani.png",
+    image: "./images/maani.webp",
     imageAlt: "ಮಾಣಿ - ಸವಿನೆನಪು",
     memorial: true,
   },
@@ -140,6 +140,12 @@ const slides = [
   },
 ];
 
+// Phones: skip the heavy blur filters and endless floating animations (smoother, less battery)
+const lite =
+  typeof window !== "undefined" &&
+  (window.matchMedia("(max-width: 900px)").matches ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
 const Hero = () => {
   const [direction, setDirection] = useState(1);
   const [current, setCurrent] = useState(() => {
@@ -174,9 +180,9 @@ const Hero = () => {
   };
 
   const textIn = (d, delay = 0) => ({
-    initial: { x: d === 1 ? 140 : -140, opacity: 0, filter: "blur(8px)" },
-    animate: { x: 0, opacity: 1, filter: "blur(0px)" },
-    exit: { x: d === 1 ? -140 : 140, opacity: 0, filter: "blur(8px)" },
+    initial: { x: d === 1 ? 140 : -140, opacity: 0, ...(lite ? {} : { filter: "blur(8px)" }) },
+    animate: { x: 0, opacity: 1, ...(lite ? {} : { filter: "blur(0px)" }) },
+    exit: { x: d === 1 ? -140 : 140, opacity: 0, ...(lite ? {} : { filter: "blur(8px)" }) },
     transition: { duration: 0.6, ease, delay },
   });
 
@@ -412,7 +418,7 @@ const Hero = () => {
                   <motion.div
                     key={d.day}
                     className="date-card"
-                    animate={{ y: [0, i ? 14 : -14, 0] }}
+                    animate={lite ? undefined : { y: [0, i ? 14 : -14, 0] }}
                     transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
                   >
                     <span className="date-week">{d.week}</span>
@@ -426,13 +432,15 @@ const Hero = () => {
                 key={item.id + "-img"}
                 src={item.image}
                 alt={item.imageAlt}
+                width="900" height="900"
+                decoding="async"
                 className={"hero-img" + (item.memorial ? " memorial-img" : "")}
                 initial={{ scale: 0.2, rotate: direction === 1 ? 90 : -90, opacity: 0 }}
-                animate={{ scale: 1, rotate: 0, opacity: 1, y: [0, -18, 0] }}
+                animate={{ scale: 1, rotate: 0, opacity: 1, ...(lite ? {} : { y: [0, -18, 0] }) }}
                 exit={{ scale: 0.2, rotate: direction === 1 ? -90 : 90, opacity: 0 }}
                 transition={{
                   type: "spring", stiffness: 65, damping: 15,
-                  y: { repeat: Infinity, duration: 4.5, ease: "easeInOut" },
+                  ...(lite ? {} : { y: { repeat: Infinity, duration: 4.5, ease: "easeInOut" } }),
                 }}
               />
             )}
