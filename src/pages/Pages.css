@@ -115,3 +115,6 @@ th { color: #FFD25A; }
 .sticky-col { position: sticky; right: 0; background: #0b1226; box-shadow: -8px 0 12px rgba(0,0,0,.35); }
 .dup-badge { margin-left: .5rem; background: #DA291C; color: #fff; border-radius: 10px; padding: .1rem .5rem; font-size: .72rem; font-weight: 700; }
 @media print { .pp-table th { width: 40%; } }
+
+.designer-note a { color: #FFBC0D; text-decoration: underline; text-underline-offset: 4px; }
+.designer-note a:hover { color: #fff; }
