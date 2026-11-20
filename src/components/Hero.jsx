@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./Hero.css";
 import Navbar from "./Navbar";
 import Countdown from "./Countdown";
@@ -146,6 +146,20 @@ const Hero = () => {
     return Number.isInteger(n) && n >= 0 && n < slides.length ? n : 0;
   });
   const item = slides[current];
+  const touch = useRef(null);
+
+  const onTouchStart = (e) => {
+    const t = e.touches[0];
+    touch.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e) => {
+    if (!touch.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touch.current.x;
+    const dy = t.clientY - touch.current.y;
+    touch.current = null;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+  };
 
   const go = (dir) => {
     setDirection(dir);
@@ -166,7 +180,7 @@ const Hero = () => {
   });
 
   return (
-    <div className="hero">
+    <div className="hero" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="bg-slides-container">
         {[0, 1, 2].map((i) => (
           <div key={i} className="bg-slide-track">
@@ -426,6 +440,7 @@ const Hero = () => {
 
       <div className="arrows">
         <button className="arrow left" onClick={() => go(-1)} aria-label="ಹಿಂದಕ್ಕೆ">←</button>
+        <span className="slide-count">{current + 1} / {slides.length}</span>
         <button className="arrow right" onClick={() => go(1)} aria-label="ಮುಂದಕ್ಕೆ">→</button>
       </div>
     </div>
