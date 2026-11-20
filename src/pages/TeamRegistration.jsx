@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { PLACES } from "../lib/places";
+import { brandify } from "../lib/brand";
 import { NotConfigured, cleanPhone, validPhone } from "./Shared";
 import "./Pages.css";
 
@@ -44,7 +45,7 @@ export default function TeamRegistration() {
       <div className="page">
         <form className="card" onSubmit={submit}>
           <h2>ತಂಡ ನೋಂದಣಿ</h2>
-          <p className="sub">ಮಾಣಿ ಟ್ರೋಫಿಗಾಗಿ ನಿಮ್ಮ ತಂಡದ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.</p>
+          <p className="sub">{brandify("ಮಾಣಿ ಟ್ರೋಫಿಗಾಗಿ ನಿಮ್ಮ ತಂಡದ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.")}</p>
           <div className="note">
             <b>ಗಮನಿಸಿ:</b>
             <ul>

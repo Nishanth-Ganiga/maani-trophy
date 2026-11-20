@@ -326,3 +326,8 @@
   }
   .hero-main-layout { padding-bottom: 130px; }
 }
+
+/* Show the English name only when the page has been translated (Google/Chrome/Edge) */
+.brand-en { display: none; }
+html.translated-ltr .brand-en, html.translated-rtl .brand-en { display: inline; }
+html.translated-ltr .brand-kn, html.translated-rtl .brand-kn { display: none; }

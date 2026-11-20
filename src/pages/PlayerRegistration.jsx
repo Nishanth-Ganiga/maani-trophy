@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { ROLES, JERSEY_SIZES, MAX_PHOTO_BYTES, PHOTO_TYPES, PHOTO_BUCKET } from "../lib/options";
+import { brandify } from "../lib/brand";
 import { NotConfigured } from "./Shared";
 import "./Pages.css";
 
@@ -73,7 +74,7 @@ export default function PlayerRegistration() {
       <div className="page">
         <form className="card" onSubmit={submit}>
           <h2>ಆಟಗಾರ ನೋಂದಣಿ</h2>
-          <p className="sub">ಮಾಣಿ ಟ್ರೋಫಿಯಲ್ಲಿ ಆಡಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.</p>
+          <p className="sub">{brandify("ಮಾಣಿ ಟ್ರೋಫಿಯಲ್ಲಿ ಆಡಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.")}</p>
 
           <div className="note">
             <b>ಗಮನಿಸಿ:</b> ತಂಡದ ಜೆರ್ಸಿ ಪಡೆಯಲು ಪ್ರತಿ ಆಟಗಾರರು ₹200 ನೋಂದಣಿ ಶುಲ್ಕವನ್ನು ಪಾವತಿಸುವುದು ಕಡ್ಡಾಯ.

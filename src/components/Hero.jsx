@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import "./Hero.css";
 import Navbar from "./Navbar";
 import Countdown from "./Countdown";
+import { brandify } from "../lib/brand";
 import { PLACES } from "../lib/places";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -210,7 +211,7 @@ const Hero = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {item.ghost}
+          {brandify(item.ghost)}
         </motion.div>
       </AnimatePresence>
 
@@ -224,11 +225,11 @@ const Hero = () => {
               className="hero-text-group"
               {...textIn(direction, 0.1)}
             >
-              <p className="hero-presents">{item.kicker}</p>
+              <p className="hero-presents">{brandify(item.kicker)}</p>
               <h1 className={"hero-title" + (item.memorial ? " memorial-title" : "")}>
-                {item.title}
+                {brandify(item.title)}
               </h1>
-              {item.text && <p className="hero-text">{item.text}</p>}
+              {item.text && <p className="hero-text">{brandify(item.text)}</p>}
               {item.countdown && <Countdown />}
               {item.contacts && (
                 <div className="contact-box">
