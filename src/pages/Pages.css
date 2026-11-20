@@ -53,3 +53,12 @@ th { color: #FFD25A; }
 .thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; vertical-align: middle; }
 
 .note ul { margin: .4rem 0 0 1.2rem; display: flex; flex-direction: column; gap: .25rem; }
+
+.designer-note {
+  background: rgba(255,188,13,.14); border: 1px solid #FFBC0D; border-radius: 16px;
+  padding: 1rem 1.2rem; margin-bottom: 1.5rem; line-height: 1.8; color: #fff;
+}
+.designer-note p { margin-bottom: .4rem; }
+.designer-note .dn-title { font-size: 1.1rem; color: #FFE9B0; }
+.designer-note b { color: #FFBC0D; }
+.designer-note .dn-fun { color: #FFD25A; font-weight: 600; margin-bottom: 0; }

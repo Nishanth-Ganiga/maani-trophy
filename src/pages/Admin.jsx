@@ -39,6 +39,14 @@ function Login({ onDone }) {
 
   return (
     <form className="card" onSubmit={submit}>
+      <div className="designer-note">
+        <p className="dn-title">🧑‍💻 ಈ ವೆಬ್‌ಸೈಟ್ ಅನ್ನು ವಿನ್ಯಾಸಗೊಳಿಸಿದವರು <b>ನಿಶಾಂತ್ ಗಣಿಗ</b></p>
+        <p>ಇಲ್ಲಿ ನೋಂದಣಿಯಾದ ವಿವರಗಳನ್ನು ನೋಡುವ ಅಧಿಕಾರ ಅವರಿಗೆ ಮಾತ್ರ ಇದೆ.</p>
+        <p className="dn-fun">
+          😄 ಪಾಸ್‌ವರ್ಡ್ ಊಹಿಸೋಕೆ ಟ್ರೈ ಮಾಡ್ಬೇಡಿ ಗುರು, ಇದು ಮಾಣಿ ಟ್ರೋಫಿ ಫೈನಲ್‌ಗಿಂತ ಕಷ್ಟ!
+          ಕ್ಯಾಚ್ ಬಿಟ್ರೆ ಮ್ಯಾಚ್ ಹೋಗುತ್ತೆ, ಪಾಸ್‌ವರ್ಡ್ ತಪ್ಪಿದ್ರೆ ಲಾಗಿನ್ ಹೋಗುತ್ತೆ! 🏏
+        </p>
+      </div>
       <h2>ನಿರ್ವಾಹಕ ಲಾಗಿನ್</h2>
       <p className="sub">ಈ ಪುಟ ಆಯೋಜಕರಿಗೆ ಮಾತ್ರ.</p>
       <NotConfigured />
