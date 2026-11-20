@@ -180,6 +180,7 @@ const Hero = () => {
   });
 
   return (
+    <>
     <div className="hero" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="bg-slides-container">
         {[0, 1, 2].map((i) => (
@@ -438,12 +439,13 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="arrows">
-        <button className="arrow left" onClick={() => go(-1)} aria-label="ಹಿಂದಕ್ಕೆ">←</button>
-        <span className="slide-count">{current + 1} / {slides.length}</span>
-        <button className="arrow right" onClick={() => go(1)} aria-label="ಮುಂದಕ್ಕೆ">→</button>
-      </div>
     </div>
+    <div className="arrows">
+      <button type="button" className="arrow left" onClick={() => go(-1)} aria-label="ಹಿಂದಕ್ಕೆ">←</button>
+      <span className="slide-count">{current + 1} / {slides.length}</span>
+      <button type="button" className="arrow right" onClick={() => go(1)} aria-label="ಮುಂದಕ್ಕೆ">→</button>
+    </div>
+    </>
   );
 };
 
