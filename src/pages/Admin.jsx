@@ -81,12 +81,16 @@ function Dashboard({ onLogout }) {
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const remove = async (table, id, photoUrl) => {
-    if (!window.confirm("Are you sure you want to delete this?")) return;
-    await supabase.from(table).delete().eq("id", id);
-    if (photoUrl) await supabase.storage.from(PHOTO_BUCKET).remove([photoUrl.split("/").pop()]);
-    load();
+  const remove = async (table, row) => {
+    const label = row.full_name || row.team_name;
+    if (!window.confirm(`Delete "${label}"? This cannot be undone.`)) return;
+    const { error } = await supabase.from(table).delete().eq("id", row.id);
+    if (error) return setErr("Delete failed: " + error.message);
+    if (row.photo_url) await supabase.storage.from(PHOTO_BUCKET).remove([row.photo_url.split("/").pop()]);
+    load(); // reloads the lists, so the Players PDF no longer contains this record
   };
+  const phoneCount = {};
+  players.forEach((pl) => { if (pl.phone) phoneCount[pl.phone] = (phoneCount[pl.phone] || 0) + 1; });
   const downloadPdf = async () => {
     if (!players.length) return window.alert("No players registered yet.");
     const imgs = [...document.querySelectorAll(".print-area img")];
@@ -121,28 +125,28 @@ function Dashboard({ onLogout }) {
       <div className="table-wrap">
         {tab === "teams" ? (
           <table>
-            <thead><tr><th>Team</th><th>Owner</th><th>Mobile</th><th>Place</th><th>Registered on</th><th></th></tr></thead>
+            <thead><tr><th>Team</th><th>Owner</th><th>Mobile</th><th>Place</th><th>Registered on</th><th className="sticky-col"></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.team_name}</td><td>{r.owner_name}</td><td>{r.phone}</td><td>{r.place}</td>
                   <td>{fmt(r.created_at)}</td>
-                  <td><button className="btn small danger" onClick={() => remove("teams", r.id)}>Delete</button></td>
+                  <td className="sticky-col"><button className="btn small danger" onClick={() => remove("teams", r)}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
           <table>
-            <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Mobile</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Mobile</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th className="sticky-col"></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.no}</td>
                   <td>{r.photo_url ? <a href={r.photo_url} target="_blank" rel="noreferrer"><img className="thumb" src={r.photo_url} alt="" /></a> : "—"}</td>
-                  <td>{r.full_name}</td><td>{r.phone || "—"}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
+                  <td>{r.full_name}</td><td>{r.phone || "—"}{phoneCount[r.phone] > 1 && <span className="dup-badge">Duplicate</span>}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
                   <td>{fmt(r.created_at)}</td>
-                  <td><button className="btn small danger" onClick={() => remove("players", r.id, r.photo_url)}>Delete</button></td>
+                  <td className="sticky-col"><button className="btn small danger" onClick={() => remove("players", r)}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
