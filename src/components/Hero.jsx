@@ -141,7 +141,10 @@ const slides = [
 
 const Hero = () => {
   const [direction, setDirection] = useState(1);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(() => {
+    const n = Number(new URLSearchParams(window.location.search).get("slide"));
+    return Number.isInteger(n) && n >= 0 && n < slides.length ? n : 0;
+  });
   const item = slides[current];
 
   const go = (dir) => {

@@ -258,3 +258,53 @@
 .fact-label { font-weight: 700; font-size: .95rem; }
 .fact-value { font-weight: 900; font-size: 1.4rem; line-height: 1.3; }
 @media (max-width: 900px) { .facts-list { width: 100%; } .countdown { justify-content: center; } }
+
+/* ---------- Mobile polish ---------- */
+.hero { min-height: 100svh; }
+
+@media (max-width: 900px) {
+  .hero-main-layout { padding: 135px 5% 120px; gap: 1.5rem; }
+  .hero-title { font-size: 2.3rem; line-height: 1.4; }
+  .memorial-title { font-size: 2rem; }
+  .hero-presents { font-size: 1.05rem; }
+  .hero-content, .hero-text-group { width: 100%; }
+  .hero-text-group { gap: 1.1rem; }
+  .cta-primary, .cta-secondary { padding: .85rem 1.4rem; font-size: .95rem; }
+  .slide-bg-word { font-size: 45vw; }
+
+  /* arrows stay reachable while scrolling long slides */
+  .arrows {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    gap: 1.2rem; z-index: 50;
+  }
+  .arrow { height: 54px; width: 54px; font-size: 1.4rem; }
+
+  .date-cards { gap: 1rem; justify-content: center; }
+  .date-card { width: 42vw; max-width: 170px; padding: 1.1rem .6rem; }
+  .date-day { font-size: 4rem; }
+  .countdown { justify-content: center; }
+  .countdown-card { min-width: 0; flex: 1 1 150px; }
+  .cd-days { font-size: 2.4rem; }
+
+  .team-chips { gap: .5rem; }
+  .team-chip { font-size: .9rem; padding: .55rem .6rem; gap: .35rem; }
+
+  .prize-card { padding: .7rem 1rem; }
+  .prize-rank { font-size: .95rem; }
+  .prize-amount { font-size: 1.3rem; }
+  .awards-chips span { font-size: .85rem; }
+
+  .facts-list { gap: .7rem; }
+  .fact-card { padding: 1rem .5rem; }
+  .fact-icon { font-size: 1.8rem; }
+  .fact-value { font-size: 1.15rem; }
+
+  .rules-list li { font-size: .95rem; padding: .75rem .9rem; gap: .7rem; }
+  .map-card { aspect-ratio: 1 / 1; }
+  .contact-list a { flex: 1 1 150px; align-items: center; }
+}
+
+@media (max-width: 380px) {
+  .hero-title { font-size: 2rem; }
+  .nav-links { font-size: .78rem; }
+}
