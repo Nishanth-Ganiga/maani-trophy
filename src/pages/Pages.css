@@ -74,3 +74,30 @@ th { color: #FFD25A; }
   .toolbar .btn.small, .toolbar input { flex: 1 1 140px; }
   th, td { padding: .55rem .6rem; font-size: .85rem; }
 }
+
+/* ---------- Players PDF (print) ---------- */
+.print-area { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: #fff !important; }
+  .navbar, .no-print { display: none !important; }
+  .page { padding: 0 !important; background: #fff !important; min-height: 0 !important; }
+  .print-area { display: block; color: #111; font-family: 'Poppins', 'Noto Sans Kannada', sans-serif; }
+  .print-page {
+    page-break-after: always; break-after: page; height: 255mm;
+    display: flex; flex-direction: column; align-items: center; gap: 10mm; text-align: center;
+  }
+  .print-page:last-child { page-break-after: auto; break-after: auto; }
+  .print-page header {
+    width: 100%; display: flex; justify-content: space-between; font-weight: 700; font-size: 11pt;
+    border-bottom: 3px solid #FFBC0D; padding-bottom: 4mm;
+  }
+  .pp-number { font-size: 30pt; font-weight: 800; color: #DA291C; }
+  .pp-photo { width: 85mm; height: 85mm; object-fit: cover; border-radius: 6mm; border: 2mm solid #FFBC0D; }
+  .print-page h1 { font-size: 26pt; line-height: 1.3; }
+  .pp-table { width: 100%; max-width: 140mm; border-collapse: collapse; font-size: 14pt; }
+  .pp-table th, .pp-table td { border: 1px solid #ccc; padding: 3mm 4mm; text-align: left; white-space: normal; color: #111; }
+  .pp-table th { background: #FFF3CC; width: 45%; }
+  .print-page footer { margin-top: auto; font-size: 10pt; color: #555; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

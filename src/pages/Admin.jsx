@@ -74,10 +74,10 @@ function Dashboard({ onLogout }) {
   const load = useCallback(async () => {
     const [t, p] = await Promise.all([
       supabase.from("teams").select("*").order("created_at", { ascending: false }),
-      supabase.from("players").select("*").order("created_at", { ascending: false }),
+      supabase.from("players").select("*").order("created_at", { ascending: true }),
     ]);
     if (t.error || p.error) return setErr("Could not load data. Check that your user is added to the admins table.");
-    setErr(""); setTeams(t.data); setPlayers(p.data);
+    setErr(""); setTeams(t.data); setPlayers(p.data.map((pl, i) => ({ ...pl, no: i + 1 })));
   }, []);
   useEffect(() => { load(); }, [load]);
 
@@ -87,11 +87,21 @@ function Dashboard({ onLogout }) {
     if (photoUrl) await supabase.storage.from(PHOTO_BUCKET).remove([photoUrl.split("/").pop()]);
     load();
   };
+  const downloadPdf = async () => {
+    if (!players.length) return window.alert("No players registered yet.");
+    const imgs = [...document.querySelectorAll(".print-area img")];
+    await Promise.all(imgs.map((i) => (i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; }))));
+    const old = document.title;
+    document.title = "Maani-Trophy-Players";
+    window.addEventListener("afterprint", () => { document.title = old; }, { once: true });
+    window.print();
+  };
   const match = (r) => JSON.stringify(Object.values(r)).toLowerCase().includes(q.toLowerCase());
   const rows = (tab === "teams" ? teams : players).filter(match);
 
   return (
-    <div className="card wide">
+    <>
+    <div className="card wide no-print">
       <h2>Admin Dashboard</h2>
       <p className="sub">Total teams: {teams.length} · Total players: {players.length}</p>
       {err && <div className="msg err">{err}</div>}
@@ -103,6 +113,7 @@ function Dashboard({ onLogout }) {
           style={{ padding: ".5rem 1rem", borderRadius: 20, border: "2px solid rgba(255,255,255,.3)", background: "rgba(255,255,255,.08)", color: "#fff", fontFamily: "inherit" }}
         />
         <button className="btn small" onClick={() => download(tab + ".csv", rows)}>Download CSV</button>
+        <button className="btn small" onClick={downloadPdf}>Download Players PDF</button>
         <button className="btn small ghost" onClick={load}>Refresh</button>
         <button className="btn small danger" onClick={onLogout}>Log out</button>
       </div>
@@ -123,10 +134,11 @@ function Dashboard({ onLogout }) {
           </table>
         ) : (
           <table>
-            <thead><tr><th>Photo</th><th>Name</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
+            <thead><tr><th>#</th><th>Photo</th><th>Name</th><th>Role</th><th>Jersey name</th><th>Jersey size</th><th>Registered on</th><th></th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
+                  <td>{r.no}</td>
                   <td>{r.photo_url ? <a href={r.photo_url} target="_blank" rel="noreferrer"><img className="thumb" src={r.photo_url} alt="" /></a> : "—"}</td>
                   <td>{r.full_name}</td><td>{roleEn(r.role)}</td><td>{r.jersey_name}</td><td>{r.jersey_size}</td>
                   <td>{fmt(r.created_at)}</td>
@@ -139,6 +151,30 @@ function Dashboard({ onLogout }) {
         {!rows.length && <p className="sub" style={{ marginTop: "1rem" }}>No records found.</p>}
       </div>
     </div>
+
+    <div className="print-area">
+      {players.map((pl) => (
+        <section className="print-page" key={pl.id}>
+          <header>
+            <span>Maani Trophy · Player Registration</span>
+            <span>ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ</span>
+          </header>
+          <div className="pp-number">Player No. {pl.no}</div>
+          {pl.photo_url && <img src={pl.photo_url} alt="" className="pp-photo" />}
+          <h1>{pl.full_name}</h1>
+          <table className="pp-table">
+            <tbody>
+              <tr><th>Role</th><td>{roleEn(pl.role)}</td></tr>
+              <tr><th>Jersey name</th><td>{pl.jersey_name}</td></tr>
+              <tr><th>Jersey size</th><td>{pl.jersey_size}</td></tr>
+              <tr><th>Registered on</th><td>{fmt(pl.created_at)}</td></tr>
+            </tbody>
+          </table>
+          <footer>Player {pl.no} of {players.length} · Total registered players: {players.length}</footer>
+        </section>
+      ))}
+    </div>
+    </>
   );
 }
 
