@@ -33,7 +33,7 @@ function Login({ onDone }) {
     setBusy(true); setErr("");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) setErr("ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ತಪ್ಪಾಗಿದೆ.");
+    if (error) setErr("😂 ಏನ್ ಗುರು, ಪಾಸ್‌ವರ್ಡ್ ಊಹಿಸೋಕೆ ಬಂದ್ರಾ? ಇದು ಕ್ಯಾಚ್ ಹಿಡಿದಷ್ಟು ಸುಲಭ ಅಲ್ಲ — ಔಟ್! 🏏 ಈ ಬಾಗಿಲು ನಿಶಾಂತ್ ಗಾಣಿಗ ಅವರಿಗೆ ಮಾತ್ರ ತೆರೆಯುತ್ತೆ.");
     else onDone();
   };
 
