@@ -21,7 +21,7 @@ const slides = [
     imageAlt: "ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ",
     contacts: [
       { name: "ರಮೇಶ್ ಲೋಬೋ", phone: "9353896918" },
-      { name: "ಸುಜಯ್", phone: "9611971405" },
+      { name: "ಸುಜಯ್ ಆರ್.ಕೆ", phone: "9611971405" },
     ],
     cta: true,
   },

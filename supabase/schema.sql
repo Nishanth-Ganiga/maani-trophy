@@ -31,6 +31,14 @@ alter table public.teams   enable row level security;
 alter table public.players enable row level security;
 alter table public.admins  enable row level security;
 
+-- Table access (needed on newer Supabase projects, otherwise: "permission denied for table")
+grant usage on schema public to anon, authenticated;
+grant insert on public.teams   to anon, authenticated;
+grant insert on public.players to anon, authenticated;
+grant select, update, delete on public.teams   to authenticated;
+grant select, update, delete on public.players to authenticated;
+grant select on public.admins to authenticated;
+
 -- Public visitors: may only ADD registrations (cannot read them)
 create policy "anyone can register team"   on public.teams   for insert to anon, authenticated with check (true);
 create policy "anyone can register player" on public.players for insert to anon, authenticated with check (true);
