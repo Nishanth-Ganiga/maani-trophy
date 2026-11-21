@@ -76,7 +76,8 @@ export default function PlayerRegistration() {
     setBusy(false);
     if (error) {
       await supabase.storage.from(PHOTO_BUCKET).remove([path]);
-      return setStatus({ ok: false, text: "ನೋಂದಣಿ ವಿಫಲವಾಯಿತು. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ." });
+      console.error("player insert failed", error);
+      return setStatus({ ok: false, text: "ನೋಂದಣಿ ವಿಫಲವಾಯಿತು. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.", detail: error.message });
     }
     setStatus({ ok: true, text: "🏆 ನಿಮ್ಮ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ಧನ್ಯವಾದಗಳು." });
     setF(empty); setPhoto(null); setPreview("");
@@ -96,7 +97,7 @@ export default function PlayerRegistration() {
           </div>
 
           <NotConfigured />
-          {status && <div className={"msg " + (status.ok ? "ok" : "err")}>{status.text}</div>}
+          {status && <div className={"msg " + (status.ok ? "ok" : "err")}>{status.text}{status.detail && <small className="detail">Error: {status.detail}</small>}</div>}
 
           <div className="field">
             <label>ಆಟಗಾರರ ಹೆಸರು *</label>

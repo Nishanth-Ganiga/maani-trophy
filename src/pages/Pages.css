@@ -118,3 +118,5 @@ th { color: #FFD25A; }
 
 .designer-note a { color: #FFBC0D; text-decoration: underline; text-underline-offset: 4px; }
 .designer-note a:hover { color: #fff; }
+
+.msg .detail { display: block; margin-top: .4rem; font-weight: 400; font-size: .8rem; opacity: .85; word-break: break-word; }

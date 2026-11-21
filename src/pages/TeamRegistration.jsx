@@ -34,6 +34,7 @@ export default function TeamRegistration() {
         text: error.code === "23505"
           ? "ಈ ಹೆಸರಿನ ತಂಡ ಈಗಾಗಲೇ ನೋಂದಣಿಯಾಗಿದೆ. ಬೇರೆ ಹೆಸರು ಬಳಸಿ."
           : "ನೋಂದಣಿ ವಿಫಲವಾಯಿತು. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.",
+        detail: error.code === "23505" ? undefined : error.message,
       });
     setStatus({ ok: true, text: "🏆 ನಿಮ್ಮ ತಂಡದ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ಧನ್ಯವಾದಗಳು." });
     setF(empty);
@@ -55,7 +56,7 @@ export default function TeamRegistration() {
             </ul>
           </div>
           <NotConfigured />
-          {status && <div className={"msg " + (status.ok ? "ok" : "err")}>{status.text}</div>}
+          {status && <div className={"msg " + (status.ok ? "ok" : "err")}>{status.text}{status.detail && <small className="detail">Error: {status.detail}</small>}</div>}
           <div className="field">
             <label>ತಂಡದ ಹೆಸರು *</label>
             <input required enterKeyHint="next" value={f.team_name} onChange={set("team_name")} />
