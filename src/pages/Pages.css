@@ -78,28 +78,48 @@ th { color: #FFD25A; }
 /* ---------- Players PDF (print) ---------- */
 .print-area { display: none; }
 @media print {
-  @page { size: A4; margin: 14mm; }
+  @page { size: A4; margin: 10mm; }
   body { background: #fff !important; }
   .navbar, .no-print { display: none !important; }
   .page { padding: 0 !important; background: #fff !important; min-height: 0 !important; }
-  .print-area { display: block; color: #111; font-family: 'Poppins', 'Noto Sans Kannada', sans-serif; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-area { display: block; font-family: 'Poppins', 'Noto Sans Kannada', sans-serif; }
   .print-page {
-    page-break-after: always; break-after: page; height: 255mm;
-    display: flex; flex-direction: column; align-items: center; gap: 6mm; text-align: center;
+    page-break-after: always; break-after: page; height: 275mm; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; gap: 5mm; text-align: center;
+    padding: 9mm 10mm 7mm; color: #fff; border-radius: 8mm; overflow: hidden;
+    background: radial-gradient(circle at 80% 0%, #C4510B 0%, #0E1A3D 45%, #050913 100%);
+    border: 2.2mm solid #FFBC0D; outline: 0.6mm solid #FFE08A; outline-offset: -3.6mm;
   }
   .print-page:last-child { page-break-after: auto; break-after: auto; }
-  .print-page header {
-    width: 100%; display: flex; justify-content: space-between; font-weight: 700; font-size: 11pt;
-    border-bottom: 3px solid #FFBC0D; padding-bottom: 4mm;
+  .pp-head { width: 100%; display: flex; align-items: center; gap: 5mm; text-align: left; }
+  .pp-logo { width: 17mm; height: 17mm; object-fit: contain; }
+  .pp-event { font-size: 17pt; font-weight: 800; color: #FFD25A; line-height: 1.3; }
+  .pp-org { font-size: 10pt; color: rgba(255,255,255,.85); }
+  .pp-badge {
+    margin-left: auto; width: 24mm; height: 24mm; border-radius: 50%; background: #DA291C; color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 8pt; font-weight: 700; line-height: 1.1; border: 1.2mm solid #FFE08A;
   }
-  .pp-number { font-size: 30pt; font-weight: 800; color: #DA291C; }
-  .pp-photo { max-width: 140mm; max-height: 100mm; width: auto; height: auto; object-fit: contain; border: 1.5mm solid #FFBC0D; image-rendering: auto; }
-  .print-page h1 { font-size: 26pt; line-height: 1.3; }
-  .pp-table { width: 100%; max-width: 140mm; border-collapse: collapse; font-size: 14pt; }
-  .pp-table th, .pp-table td { border: 1px solid #ccc; padding: 3mm 4mm; text-align: left; white-space: normal; color: #111; }
-  .pp-table th { background: #FFF3CC; width: 45%; }
-  .print-page footer { margin-top: auto; font-size: 10pt; color: #555; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pp-badge b { font-size: 21pt; font-weight: 900; line-height: 1.05; }
+  .pp-photo-wrap {
+    padding: 2.5mm; background: linear-gradient(135deg, #FFE08A, #FFBC0D, #C98A00); border-radius: 4mm;
+    box-shadow: 0 3mm 6mm rgba(0,0,0,.5); max-width: 165mm;
+  }
+  .pp-photo { display: block; max-width: 160mm; max-height: 150mm; width: auto; height: auto; border-radius: 2mm; background: #000; }
+  .pp-nophoto { width: 120mm; height: 120mm; display: flex; align-items: center; justify-content: center; background: #222; color: #aaa; font-size: 16pt; }
+  .pp-name { margin: 0; font-size: 36pt; font-weight: 900; line-height: 1.25; color: #fff; text-shadow: 0 1mm 2mm rgba(0,0,0,.6); word-break: break-word; }
+  .pp-role {
+    background: #FFBC0D; color: #111; font-weight: 800; font-size: 14pt; padding: 1.5mm 8mm; border-radius: 10mm;
+  }
+  .pp-cards { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 1mm; }
+  .pp-cards div {
+    background: rgba(255,255,255,.12); border: 0.4mm solid rgba(255,210,90,.7); border-radius: 4mm;
+    padding: 3mm 2mm; display: flex; flex-direction: column; gap: 1mm;
+  }
+  .pp-cards span { font-size: 9pt; color: #FFD25A; font-weight: 700; }
+  .pp-cards b { font-size: 14pt; font-weight: 800; word-break: break-word; }
+  .print-page footer { margin-top: auto; font-size: 9pt; color: rgba(255,255,255,.75); }
 }
 
 .hint { color: #FFD25A; font-size: .9rem; }
@@ -114,7 +134,6 @@ th { color: #FFD25A; }
 
 .sticky-col { position: sticky; right: 0; background: #0b1226; box-shadow: -8px 0 12px rgba(0,0,0,.35); }
 .dup-badge { margin-left: .5rem; background: #DA291C; color: #fff; border-radius: 10px; padding: .1rem .5rem; font-size: .72rem; font-weight: 700; }
-@media print { .pp-table th { width: 40%; } }
 
 .designer-note a { color: #FFBC0D; text-decoration: underline; text-underline-offset: 4px; }
 .designer-note a:hover { color: #fff; }

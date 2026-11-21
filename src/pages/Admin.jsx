@@ -159,23 +159,29 @@ function Dashboard({ onLogout }) {
     <div className="print-area">
       {players.map((pl) => (
         <section className="print-page" key={pl.id}>
-          <header>
-            <span>Maani Trophy · Player Registration</span>
-            <span>ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ</span>
+          <header className="pp-head">
+            <img src="./images/darkast-colony-sm.webp" alt="" className="pp-logo" />
+            <div>
+              <div className="pp-event">ಮಾಣಿ ಟ್ರೋಫಿ 2027</div>
+              <div className="pp-org">ದರ್ಖಾಸ್ತ್ ಕಾಲೋನಿ ಗೆಳೆಯರ ಬಳಗ</div>
+            </div>
+            <div className="pp-badge">Player<br /><b>{pl.no}</b></div>
           </header>
-          <div className="pp-number">Player No. {pl.no}</div>
-          {pl.photo_url && <img src={pl.photo_url} alt="" className="pp-photo" />}
-          <h1>{pl.full_name}</h1>
-          <table className="pp-table">
-            <tbody>
-              <tr><th>Mobile</th><td>{pl.phone || "—"}</td></tr>
-              <tr><th>Role</th><td>{roleEn(pl.role)}</td></tr>
-              <tr><th>Jersey name</th><td>{pl.jersey_name}</td></tr>
-              <tr><th>Jersey size</th><td>{pl.jersey_size}</td></tr>
-              <tr><th>Registered on</th><td>{fmt(pl.created_at)}</td></tr>
-            </tbody>
-          </table>
-          <footer>Player {pl.no} of {players.length} · Total registered players: {players.length}</footer>
+
+          <div className="pp-photo-wrap">
+            {pl.photo_url ? <img src={pl.photo_url} alt="" className="pp-photo" /> : <div className="pp-nophoto">No photo</div>}
+          </div>
+
+          <h1 className="pp-name">{pl.full_name}</h1>
+          <div className="pp-role">{roleEn(pl.role)}</div>
+
+          <div className="pp-cards">
+            <div><span>Mobile</span><b>{pl.phone || "—"}</b></div>
+            <div><span>Jersey name</span><b>{pl.jersey_name}</b></div>
+            <div><span>Jersey size</span><b>{pl.jersey_size}</b></div>
+          </div>
+
+          <footer>Registered on {fmt(pl.created_at)} · Player {pl.no} of {players.length}</footer>
         </section>
       ))}
     </div>
