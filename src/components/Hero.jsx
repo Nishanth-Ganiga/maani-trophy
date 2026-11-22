@@ -119,7 +119,7 @@ const slides = [
     rules: [
       "ಪ್ರತಿ ತಂಡದಲ್ಲಿ ಒಬ್ಬ ಐಕಾನ್ ಆಟಗಾರ ಕಡ್ಡಾಯ.",
       "ಜೆರ್ಸಿ ಕಡ್ಡಾಯವಾಗಿದ್ದು, ಸಮಿತಿಯ ವತಿಯಿಂದ ಒದಗಿಸಲಾಗುವುದು.",
-      "ತಂಡ ಮತ್ತು ಆಟಗಾರರ ನೋಂದಣಿ 25 ಡಿಸೆಂಬರ್ 2026 ರಂದು ಕೊನೆಗೊಳ್ಳುತ್ತದೆ.",
+      "ತಂಡ ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಿದೆ. ಆಟಗಾರರ ನೋಂದಣಿ 25 ಡಿಸೆಂಬರ್ 2026 ರಂದು ಕೊನೆಗೊಳ್ಳುತ್ತದೆ.",
       "ಸಮಿತಿ ಹಾಗೂ ಅಂಪೈರ್‌ಗಳ ನಿರ್ಧಾರವೇ ಅಂತಿಮ.",
     ],
     cta: true,
@@ -269,7 +269,7 @@ const Hero = () => {
                 <div className="hero-cta-row">
                   <motion.a href="#/team" className="cta-primary"
                     whileHover={{ scale: 1.05, y: -3 }} whileTap={{ scale: 0.95 }}>
-                    ತಂಡ ನೋಂದಣಿ
+                    ತಂಡ ನೋಂದಣಿ ಮುಕ್ತಾಯ 🔒
                   </motion.a>
                   <motion.a href="#/player" className="cta-secondary"
                     whileHover={{ scale: 1.05, y: -3 }} whileTap={{ scale: 0.95 }}>

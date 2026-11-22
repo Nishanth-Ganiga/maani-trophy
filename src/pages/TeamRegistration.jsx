@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
 import { PLACES } from "../lib/places";
 import { brandify } from "../lib/brand";
+import { TEAM_REGISTRATION_OPEN } from "../lib/config";
 import { NotConfigured, cleanPhone, validPhone } from "./Shared";
 import "./Pages.css";
 
@@ -39,6 +40,26 @@ export default function TeamRegistration() {
     setStatus({ ok: true, text: "🏆 ನಿಮ್ಮ ತಂಡದ ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ಧನ್ಯವಾದಗಳು." });
     setF(empty);
   };
+
+  if (!TEAM_REGISTRATION_OPEN) {
+    return (
+      <>
+        <Navbar />
+        <div className="page">
+          <div className="card closed-card">
+            <div className="closed-icon">🔒</div>
+            <h2>ತಂಡ ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಿದೆ</h2>
+            <p className="sub">ಮಾಣಿ ಟ್ರೋಫಿಗೆ ತಂಡ ನೋಂದಣಿ ಈಗ ಮುಚ್ಚಲಾಗಿದೆ. ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ಸಂಘಟಕರನ್ನು ಸಂಪರ್ಕಿಸಿ.</p>
+            <div className="closed-contacts">
+              <a href="tel:+919353896918"><span>ರಮೇಶ್ ಲೋಬೋ</span><b>9353896918</b></a>
+              <a href="tel:+919611971405"><span>ಸುಜಯ್ ಆರ್.ಕೆ</span><b>9611971405</b></a>
+            </div>
+            <a className="btn" href="#/player" style={{ display: "inline-block", textAlign: "center", textDecoration: "none", lineHeight: "1.6" }}>ಆಟಗಾರ ನೋಂದಣಿ ಮಾಡಿ</a>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

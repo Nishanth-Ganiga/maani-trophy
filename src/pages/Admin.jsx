@@ -64,6 +64,78 @@ function Login({ onDone }) {
   );
 }
 
+const SLOTS = Array.from({ length: 16 }, (_, i) => i + 1);
+
+// Admin-managed list of the 16 tournament teams (type a name, press Save; empty name + Save clears the slot)
+function TeamSlots({ teams, reload }) {
+  const slotted = teams.filter((t) => t.slot);
+  const [names, setNames] = useState({});
+  const [busy, setBusy] = useState(0);
+  const [msg, setMsg] = useState(null);
+
+  useEffect(() => {
+    const m = {};
+    slotted.forEach((t) => { m[t.slot] = t.team_name; });
+    setNames(m);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teams]);
+
+  const saveOne = async (slot) => {
+    const name = (names[slot] ?? "").trim();
+    const existing = slotted.find((t) => t.slot === slot);
+    if (!name) {
+      if (!existing) return null;
+      const { error } = await supabase.from("teams").delete().eq("id", existing.id);
+      return error;
+    }
+    if (existing && existing.team_name === name) return null;
+    const { error } = existing
+      ? await supabase.from("teams").update({ team_name: name }).eq("id", existing.id)
+      : await supabase.from("teams").insert({ slot, team_name: name });
+    return error;
+  };
+
+  const run = async (slots) => {
+    setBusy(slots.length === 1 ? slots[0] : -1);
+    setMsg(null);
+    for (const slot of slots) {
+      const error = await saveOne(slot);
+      if (error) {
+        setBusy(0);
+        return setMsg({ ok: false, text: `Slot ${slot}: ` + (error.code === "23505" ? "this team name is already used in another slot." : error.message) });
+      }
+    }
+    setBusy(0);
+    setMsg({ ok: true, text: slots.length === 1 ? `Slot ${slots[0]} saved.` : "All slots saved." });
+    reload();
+  };
+
+  const filled = slotted.length;
+  return (
+    <div className="slots">
+      <h3 className="slots-title">Tournament teams ({filled} / 16)</h3>
+      <p className="sub" style={{ marginBottom: ".8rem" }}>Type the team name for each slot and press Save. Leave a name empty and press Save to clear that slot.</p>
+      {msg && <div className={"msg " + (msg.ok ? "ok" : "err")}>{msg.text}</div>}
+      <div className="slot-grid">
+        {SLOTS.map((n) => (
+          <div className="slot-row" key={n}>
+            <span className="slot-no">{n}</span>
+            <input
+              value={names[n] ?? ""} placeholder={"Team " + n + " name"} maxLength={60}
+              onChange={(e) => setNames({ ...names, [n]: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && run([n])}
+            />
+            <button className="btn small" disabled={busy !== 0} onClick={() => run([n])}>{busy === n ? "…" : "Save"}</button>
+          </div>
+        ))}
+      </div>
+      <button className="btn small" style={{ marginTop: "1rem" }} disabled={busy !== 0} onClick={() => run(SLOTS)}>
+        {busy === -1 ? "Saving…" : "Save all 16"}
+      </button>
+    </div>
+  );
+}
+
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState("teams");
   const [teams, setTeams] = useState([]);
@@ -73,7 +145,7 @@ function Dashboard({ onLogout }) {
 
   const load = useCallback(async () => {
     const [t, p] = await Promise.all([
-      supabase.from("teams").select("*").order("created_at", { ascending: false }),
+      supabase.from("teams").select("*").order("slot", { ascending: true, nullsFirst: false }).order("created_at", { ascending: false }),
       supabase.from("players").select("*").order("created_at", { ascending: true }),
     ]);
     if (t.error || p.error) return setErr("Could not load data. Check that your user is added to the admins table.");
@@ -102,12 +174,13 @@ function Dashboard({ onLogout }) {
   };
   const match = (r) => JSON.stringify(Object.values(r)).toLowerCase().includes(q.toLowerCase());
   const rows = (tab === "teams" ? teams : players).filter(match);
+  const legacyRows = teams.filter((t) => !t.slot).filter(match);
 
   return (
     <>
     <div className="card wide no-print">
       <h2>Admin Dashboard</h2>
-      <p className="sub">Total teams: {teams.length} · Total players: {players.length}</p>
+      <p className="sub">Teams in the 16 slots: {teams.filter((t) => t.slot).length} · Total players: {players.length}</p>
       {err && <div className="msg err">{err}</div>}
       <div className="toolbar">
         <button className={"btn small tab " + (tab === "teams" ? "active" : "ghost")} onClick={() => setTab("teams")}>Teams</button>
@@ -123,11 +196,13 @@ function Dashboard({ onLogout }) {
       </div>
 
       <div className="table-wrap">
+        {tab === "teams" && <TeamSlots teams={teams} reload={load} />}
+        {tab === "teams" && legacyRows.length > 0 && <h3 className="slots-title" style={{ marginTop: "1.6rem" }}>Earlier team registrations (not in the 16 slots)</h3>}
         {tab === "teams" ? (
-          <table>
+          legacyRows.length === 0 ? null : <table>
             <thead><tr><th>Team</th><th>Owner</th><th>Mobile</th><th>Place</th><th>Registered on</th><th className="sticky-col"></th></tr></thead>
             <tbody>
-              {rows.map((r) => (
+              {legacyRows.map((r) => (
                 <tr key={r.id}>
                   <td>{r.team_name}</td><td>{r.owner_name}</td><td>{r.phone}</td><td>{r.place}</td>
                   <td>{fmt(r.created_at)}</td>
@@ -152,7 +227,7 @@ function Dashboard({ onLogout }) {
             </tbody>
           </table>
         )}
-        {!rows.length && <p className="sub" style={{ marginTop: "1rem" }}>No records found.</p>}
+        {tab === "players" && !rows.length && <p className="sub" style={{ marginTop: "1rem" }}>No records found.</p>}
       </div>
     </div>
 

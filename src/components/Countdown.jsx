@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const DAY = 24 * 60 * 60 * 1000;
 const items = [
   {
-    label: "ನೋಂದಣಿ ಮುಕ್ತಾಯಕ್ಕೆ",
+    label: "ಆಟಗಾರ ನೋಂದಣಿ ಮುಕ್ತಾಯಕ್ಕೆ",
     done: "ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಿದೆ",
     target: new Date("2026-12-25T23:59:59+05:30"),
   },

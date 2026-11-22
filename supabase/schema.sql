@@ -2,10 +2,11 @@
 
 create table if not exists public.teams (
   id uuid primary key default gen_random_uuid(),
+  slot smallint unique check (slot between 1 and 16),
   team_name text not null unique,
-  owner_name text not null,
-  phone text not null,
-  place text not null,
+  owner_name text,
+  phone text,
+  place text,
   created_at timestamptz not null default now()
 );
 
@@ -33,14 +34,13 @@ alter table public.admins  enable row level security;
 
 -- Table access (needed on newer Supabase projects, otherwise: "permission denied for table")
 grant usage on schema public to anon, authenticated;
-grant insert on public.teams   to anon, authenticated;
 grant insert on public.players to anon, authenticated;
-grant select, update, delete on public.teams   to authenticated;
+grant select, insert, update, delete on public.teams to authenticated;
 grant select, update, delete on public.players to authenticated;
 grant select on public.admins to authenticated;
 
--- Public visitors: may only ADD registrations (cannot read them)
-create policy "anyone can register team"   on public.teams   for insert to anon, authenticated with check (true);
+-- Public visitors: may only ADD player registrations (cannot read them)
+-- Team registration is CLOSED to the public: only the admin can add/edit teams (see the admin policy below)
 create policy "anyone can register player" on public.players for insert to anon, authenticated with check (true);
 
 -- Admins: full access
@@ -64,3 +64,12 @@ create policy "admin can delete player photo" on storage.objects for delete to a
 
 -- After creating your admin user (Authentication → Users → Add user), run:
 -- insert into public.admins (user_id) select id from auth.users where email = 'YOUR_ADMIN_EMAIL';
+
+-- ---- If your tables already exist, run THIS block once to close team registration + enable the 16 team slots ----
+-- alter table public.teams add column if not exists slot smallint unique check (slot between 1 and 16);
+-- alter table public.teams alter column owner_name drop not null;
+-- alter table public.teams alter column phone drop not null;
+-- alter table public.teams alter column place drop not null;
+-- drop policy if exists "anyone can register team" on public.teams;
+-- revoke insert on public.teams from anon;
+-- grant select, insert, update, delete on public.teams to authenticated;
